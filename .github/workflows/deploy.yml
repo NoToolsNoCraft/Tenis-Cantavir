@@ -21,8 +21,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Inject GitHub Secret into index.html
+        env:
+          GIST_TOKEN: ${{ secrets.GIST_CODE }}
         run: |
-          sed -i "s|__GITHUB_TOKEN__|${{ secrets.GIST_CODE }}|g" index.html
+          sed -i "s|__GITHUB_TOKEN__|$GIST_TOKEN|g" index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
