@@ -285,7 +285,7 @@
     <script>
         // *** IMPORTANT: REPLACE WITH YOUR GIST ID AND GITHUB TOKEN ***
         const GIST_ID = "2ec14059bbfe91870fb2e9fc927e3615";
-        const GITHUB_TOKEN = "__GITHUB_TOKEN__"; // placeholder
+        const GITHUB_TOKEN = "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";
         const GIST_FILE_NAME = "reservations.json";
 
         let reservationsCache = [];
@@ -464,11 +464,14 @@
             filteredReservations.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
 
             if (currentViewMode === 'current') {
-                filteredReservations = filteredReservations.filter(res => {
-                    const reservationEndTime = new Date(res.endTime).getTime();
-                    return now - reservationEndTime < twelveHoursInMs;
-                });
-            }
+            filteredReservations = filteredReservations.filter(res => {
+                const now = Date.now();
+                const reservationStartTime = new Date(res.startTime).getTime();
+                const reservationEndTime = new Date(res.endTime).getTime();
+                // Show reservations that are still upcoming or have ended within the last 12 hours
+                return now <= reservationEndTime || (now - reservationEndTime < twelveHoursInMs);
+            });
+        }
 
             if (filteredReservations.length === 0) {
                 reservationsListDiv.innerHTML = `<p style="text-align: center; margin-top: 1rem; color: #6b7280;">${translations[currentLang].noReservations}</p>`;
