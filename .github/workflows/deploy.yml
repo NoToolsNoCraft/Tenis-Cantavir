@@ -22,7 +22,7 @@ jobs:
 
       - name: Inject GitHub Secret into index.html
         run: |
-          sed -i "s|__GITHUB_TOKEN__|${{ secrets.GIST_TOKEN }}|g" index.html
+          sed -i "s|__GITHUB_TOKEN__|${{ secrets.GIST_CODE }}|g" index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
