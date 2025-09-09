@@ -1,35 +1,24 @@
-name: Deploy Tennis Cantavir App
+name: Build and Deploy
 
 on:
   push:
     branches:
-      - main  # or your branch
-
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+      - main  # or master, depending on your default branch
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages   # ✅ Required for GitHub Pages
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Inject GitHub Secret into index.html
-        env:
-          GIST_TOKEN: ${{ secrets.GIST_CODE }}
+      - name: Replace placeholder with secret
         run: |
-          sed -i "s|__GITHUB_TOKEN__|$GIST_TOKEN|g" index.html
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./
+          sed -i "s|__GITHUB_TOKEN__|${{ secrets.GIST_CODE }}|g" index.html
 
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
